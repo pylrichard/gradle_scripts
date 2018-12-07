@@ -1,0 +1,48 @@
+//见https://docs.gradle.org/current/userguide/java_plugin.html
+apply plugin: 'java'
+apply plugin: 'idea'
+
+if (JavaVersion.current().isJava8Compatible()) {
+    allprojects {
+        tasks.withType(Javadoc) {
+            options.encoding = 'UTF-8'
+            //关闭JDK1.8的doclint特性
+            options.addStringOption('Xdoclint:none', '-quiet')
+        }
+    }
+}
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+dependencyManagement {
+    resolutionStrategy {
+        //修改本地缓存策略，检查远程依赖是否存在更新
+        cacheChangingModulesFor 0, 'seconds'
+    }
+}
+
+//为了方便查看源码及调试，把源码上传到nexus仓库
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+//为了方便查看注释，把javadoc上传到nexus仓库
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives jar
+    archives sourcesJar
+    archives javadocJar
+}
+
+idea {
+    module {
+        downloadJavadoc = true
+        downloadSources = true
+    }
+}

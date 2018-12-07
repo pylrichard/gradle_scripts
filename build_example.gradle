@@ -1,0 +1,42 @@
+/*
+    常用命令
+    1 tasks 列出项目可运行的task
+    2 assemble 打包输出项目
+    3 bootRepackage 生成可以通过'java -jar'执行的jar或war
+    4 build 测试并打包输出
+    5 clean 删除build目录
+    6 jar 生成jar
+    7 javadoc 生成javadoc包
+    8 dependencies 显示项目的所有依赖关系
+    9 uploadArchives 上传':archives'中配置的所有包到maven仓库
+*/
+//需要自定义
+buildscript {
+    ext {
+        gradleScriptsRepo = "https://raw.githubusercontent.com/pylrichard/gradle_scripts/master/"
+    }
+    apply from: gradleScriptsRepo + 'maven.gradle'
+    apply from: gradleScriptsRepo + 'version.gradle'
+    repositories {
+        //mavenCentral()
+        //mavenLocal()
+        maven { url REPOSITORY_URL }
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+subprojects {
+    apply from: gradleScriptsRepo + 'java.gradle'
+    apply from: gradleScriptsRepo + 'spring_cloud.gradle'
+
+    version = '0.1.0'
+    group = 'com.richard'
+    description = '项目描述'
+
+    dependencies {
+        compileOnly('org.springframework.boot:spring-boot-configuration-processor')
+        testCompile "org.springframework.boot:spring-boot-starter-test"
+    }
+}

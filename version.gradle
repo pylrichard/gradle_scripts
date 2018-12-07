@@ -1,0 +1,16 @@
+ext {
+    //Spring
+    springCloudVersion = 'Finchley.SR2'
+    springBootVersion = '2.0.6.RELEASE'
+
+    //Test
+    junitVersion = '4.12'
+
+    //MySQL
+    mysqlConnectorVersion = '5.1.44'
+
+    //Tools
+    lombokVersion = '1.16.18'
+    guavaVersion = '25.1-jre'
+    jodaVersion = '2.10'
+}
