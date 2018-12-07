@@ -1,12 +1,28 @@
 apply plugin: 'org.springframework.boot'
+apply plugin: "io.spring.dependency-management"
 
 dependencyManagement {
+    resolutionStrategy {
+        //修改本地缓存策略，检查远程依赖是否存在更新
+        cacheChangingModulesFor 0, 'seconds'
+    }
     imports {
         mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
     }
 }
 
-bootRepackage {
-    //默认只生成jar
-    enabled = false
+/*
+    jar task会生成jar
+ */
+jar {
+    //bootJar task会禁用jar task，需要手动开启
+    enabled = true
+}
+
+/*
+    bootJar task生成可执行jar
+ */
+bootJar {
+    //可执行jar和jar写入到不同路径
+    classifier = 'boot'
 }

@@ -1,4 +1,4 @@
-# Gradle脚本仓库
+# Gradle构建通用脚本
 
 ## 概述
 
@@ -37,3 +37,15 @@ gradle --I init.gradle assembleDebug
 4 加载GRADLE_HOME/init.d下的以.gradle结尾的文件
 
 Gradle可以通过`apply from`命令加载外部gradle文件，可以加载远程http服务器的gradle文件
+
+## Gradle缓存位置
+
+下载的文件存储在~/.gradle/caches
+
+使用`find / -name "*.gradle"`进行查找
+
+## 官方文档
+
+[Spring Boot Gradle Plugin Reference Guide](https://docs.spring.io/spring-boot/docs/current/gradle-plugin/reference/html/)
+
+[Java Plugin](https://docs.gradle.org/current/userguide/java_plugin.html)
