@@ -26,6 +26,33 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
     from javadoc.destinationDir
 }
 
+def createDir = {
+    path ->
+        File dir = new File(path)
+        if (!dir.exists()) {
+            dir.mkdirs()
+        }
+}
+
+//此处右键执行Run
+task makeDir() {
+    def paths = ['src/main/java', 'src/main/resources', 'src/test/java', 'src/test/resources']
+    doFirst {
+        paths.forEach(createDir)
+    }
+}
+
+task makeWebDir() {
+    //任务配置，要定义在动作执行前
+    dependsOn('makeDir')
+    def paths = ['src/main/webapp']
+    //任务执行
+    //doLast可以被<<替换
+    doLast {
+        paths.forEach(createDir)
+    }
+}
+
 artifacts {
     archives jar
     archives sourcesJar

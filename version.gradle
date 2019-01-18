@@ -2,15 +2,25 @@ ext {
     //Spring
     springCloudVersion = 'Finchley.SR2'
     springBootVersion = '2.0.6.RELEASE'
+    springVersion = '5.0.10.RELEASE'
 
     //Test
     junitVersion = '4.12'
 
     //MySQL
     mysqlConnectorVersion = '5.1.44'
+    druidVersion = '1.0.23'
+
+    //MyBatis
+    mybatisVersion = '3.2.8'
+    mybatisSpringVersion = '1.2.2'
 
     //Tools
     lombokVersion = '1.16.18'
     guavaVersion = '25.1-jre'
     jodaVersion = '2.10'
+    aspectjweaverVersion = '1.8.9'
+
+    //Apache Common
+    commonLangVersion = '3.8'
 }
