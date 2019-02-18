@@ -23,4 +23,10 @@ ext {
 
     //Apache Common
     commonLangVersion = '3.8'
+
+    //Config
+    apolloVersion = '1.0.0'
+
+    //APM
+    catVersion = '3.0.0'
 }

@@ -15,21 +15,31 @@ buildscript {
     ext {
         gradleScriptsRepo = "https://raw.githubusercontent.com/pylrichard/gradle_scripts/master/"
     }
+
     apply from: gradleScriptsRepo + 'maven.gradle'
     apply from: gradleScriptsRepo + 'version.gradle'
+
+    //gradle脚本需要的依赖仓库
     repositories {
-        //mavenCentral()
-        //mavenLocal()
         maven { url REPOSITORY_URL }
     }
+
     dependencies {
+        //classpath声明在执行其余gradle脚本时，ClassLoader可以使用的依赖
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
     }
 }
 
-subprojects {
+allprojects {
     apply from: gradleScriptsRepo + 'java.gradle'
     apply from: gradleScriptsRepo + 'spring_cloud.gradle'
+
+    //项目需要的依赖仓库
+    repositories {
+        mavenCentral()
+        mavenLocal()
+        maven { url REPOSITORY_URL }
+    }
 
     version = '0.1.0'
     group = 'com.richard'

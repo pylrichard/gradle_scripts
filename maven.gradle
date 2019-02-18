@@ -1,9 +1,16 @@
 apply plugin: 'maven'
+apply plugin: 'maven-publish'
 
-//为达到更好的缓存效果，将公网仓库改为私有仓库
+/*
+    可以将jar上传到Maven中央仓库、Maven私服仓库(Nexus)、Maven本地仓库
+    为达到更好的缓存效果，将公网仓库改为私有仓库
+ */
 ext {
+    LOCAL_REPOSITORY_URL = 'file://' + new File(System.getProperty('user.home'), '.m2/repository').absolutePath
     REPOSITORY_HOME = 'http://maven.aliyun.com'
     REPOSITORY_URL = REPOSITORY_HOME + "/nexus/content/groups/public"
+    USER_NAME = 'pyl'
+    PASSWORD = 'Pyl123456'
 }
 
 allprojects {
@@ -25,15 +32,48 @@ allprojects {
         }
     }
 
+    //gradle install安装到.m2本地仓库
+    install {
+        repositories.mavenInstaller {
+            pom.version = "$project.version"
+            pom.artifactId = "$artifactId"
+            pom.groupId = "$project.group"
+        }
+    }
+
+    //gradle upload上传到私服，Nexus的相关Repository的要设置为Allow Redeploy
     uploadArchives {
         repositories {
             mavenDeployer {
+                /*
+                    不同的环境通常会对应不同的git分支
+                    比如开发环境对应dev分支，测试环境对应test分支，生产环境对应master分支
+                    dev分支自测通过后合并到test分支，test分支测试通过后合并到master分支
+                    但是nexus的repository并没有区分环境，如果程序员A在日常开发中，把dev分支的artifact上传到nexus
+                    而部署人员在构建test分支的项目时从nexus上获取到的是dev分支的代码
+                    repository可以创建多个，比如
+                    http://localhost:8081/nexus/content/repositories/thirdparty_dev
+                    http://localhost:8081/nexus/content/repositories/thirdparty_test
+                    http://localhost:8081/nexus/content/repositories/thirdparty_prod
+
+                    def env = System.getProperty("env") ?: "local"
+                    url: "http://localhost:8081/nexus/content/repositories/thirdparty_$env"
+                    gradle upload -Denv=dev上传到私服
+                    开发阶段将版本号设置成SNAPSHOT，正式发布时去掉SNAPSHOT
+                 */
                 snapshotRepository(url: REPOSITORY_HOME + "/nexus/content/repositories/snapshots/") {
-                    authentication(userName: 'xxx', password: 'xxx')
+                    authentication(userName: USER_NAME, password: PASSWORD)
                 }
+
                 repository(url: REPOSITORY_HOME + "/nexus/content/repositories/releases/") {
-                    authentication(userName: 'xxx', password: 'xxx')
+                    authentication(userName: USER_NAME, password: PASSWORD)
                 }
+
+                pom.version = "$project.version"
+                pom.artifactId = "$artifactId"
+                pom.groupId = "$project.group"
+                pom.name = "$project.name"
+                pom.packaging = "jar"
             }
         }
     }
